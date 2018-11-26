@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.example.yossy.orderfoodserver.Common.Common;
 import com.example.yossy.orderfoodserver.Interface.ItemClickListener;
 import com.example.yossy.orderfoodserver.Model.Category;
+import com.example.yossy.orderfoodserver.Service.ListenOrder;
 import com.example.yossy.orderfoodserver.ViewHolder.MenuViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -115,6 +116,8 @@ public class Home extends AppCompatActivity
         recycler_menu.setLayoutManager(layoutManager);
 
         loadMenu();
+        Intent service = new Intent(Home.this,ListenOrder.class);
+        startService(service);
     }
 
     private void showDialog() {

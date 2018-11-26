@@ -20,6 +20,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 
 public class OrderStatus extends AppCompatActivity {
 
@@ -30,6 +31,8 @@ public class OrderStatus extends AppCompatActivity {
     DatabaseReference requests;
 
     FirebaseRecyclerAdapter<Request,OrderViewHolder> adapter;
+
+    MaterialSpinner spinner;
 
 
     @Override
@@ -94,11 +97,11 @@ public class OrderStatus extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
 
-        if (item.getIntent().equals(Common.UPDATE))
+        if (item.getTitle().equals(Common.UPDATE))
             showUpdateDialog(adapter.getRef(item.getOrder()).getKey(),adapter.getItem(item.getOrder()));
-        else if (item.getIntent().equals(Common.DELETE))
+        else if (item.getTitle().equals(Common.DELETE))
             deleteOrder(adapter.getRef(item.getOrder()).getKey());
-            return super.onContextItemSelected(item);
+        return super.onContextItemSelected(item);
     }
 
     private void deleteOrder(String key) {
@@ -113,12 +116,20 @@ public class OrderStatus extends AppCompatActivity {
         LayoutInflater inflater = this.getLayoutInflater();
         final View view = inflater.inflate(R.layout.update_order_layout,null);
 
+
+        spinner = (MaterialSpinner)view.findViewById(R.id.statusSpinner);
+        spinner.setItems("Pesanan Diproses","Pesanan Diantar","Bayar");
+
+        alertDialog.setView(view);
+
         final String localKey = key;
+
 
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 dialogInterface.dismiss();
+                item.setStatus(String.valueOf(spinner.getSelectedIndex()));
                 requests.child(localKey).setValue(item);
             }
         });

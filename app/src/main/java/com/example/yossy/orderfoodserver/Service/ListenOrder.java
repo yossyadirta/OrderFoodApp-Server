@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import com.example.yossy.orderfoodserver.Common.Common;
 import com.example.yossy.orderfoodserver.Model.Request;
 import com.example.yossy.orderfoodserver.OrderStatus;
+import com.example.yossy.orderfoodserver.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -59,7 +60,7 @@ public class ListenOrder extends Service implements ChildEventListener {
     private void showNotification(String key, Request request) {
         Intent intent = new Intent(getBaseContext(),OrderStatus.class);
         intent.putExtra("noMeja", request.getNoMeja());
-        //PendingIntent contentIntent = PendingIntent.getActivities(getBaseContext(),0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent contentIntent = PendingIntent.getActivity(getBaseContext(),0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getBaseContext());
 
@@ -69,11 +70,12 @@ public class ListenOrder extends Service implements ChildEventListener {
                 .setTicker("Eat Food")
                 .setContentInfo("Your order was updated")
                 .setContentText("Order #"+key+"was update status to"+Common.convertCodeToStatus(request.getStatus()))
-                //.setContentIntent(contentIntent)
-                .setContentInfo("Info");
+                .setContentIntent(contentIntent)
+                .setContentInfo("Info")
+                .setSmallIcon(R.mipmap.ic_launcher);
 
-                //NotificationManager notificationManager = (NotificationManager)getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                //notificationManager.notify(1,builder.build());
+                NotificationManager notificationManager = (NotificationManager)getBaseContext().getSystemService(android.content.Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(1,builder.build());
     }
 
     @Override
